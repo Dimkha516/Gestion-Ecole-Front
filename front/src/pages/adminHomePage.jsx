@@ -1,7 +1,9 @@
+import UsersList from "../components/listing/UsersList";
+
 const AdminHomePage = () => {
     return (
         <div>
-            <h1>What</h1>
+            <UsersList />
         </div>
     );
 };
