@@ -1,5 +1,6 @@
 import { LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
+import PropTypes from 'prop-types';
 
 const Navbar = ({ username, onLogout }) => {
   return (
@@ -20,6 +21,10 @@ const Navbar = ({ username, onLogout }) => {
       </Button>
     </nav>
   );
+};
+Navbar.propTypes = {
+  username: PropTypes.string.isRequired,
+  onLogout: PropTypes.func.isRequired,
 };
 
 export default Navbar;

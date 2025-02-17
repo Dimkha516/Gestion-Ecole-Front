@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import LoginPage from "./pages/login";
 
 function App() {
   // Simuler l'utilisateur connecté:
@@ -11,7 +12,14 @@ function App() {
   const isLoginPage = window.location.pathname === "/login";
 
   if (isLoginPage) {
-    return <div>Page de Login</div>; // Remplacer par votre composant Login
+    return (
+      <LoginPage
+        onLogin={(formData) => {
+          console.log("Tentative de connexion avec:", formData);
+          // Implémentez votre logique d'authentification ici
+        }}
+      />
+    );
   }
 
   const handleLogout = () => {
