@@ -4,14 +4,14 @@ import PropTypes from 'prop-types'
 
 
 const menuItems = [
-    { icon: Home, label: "Tableau de bord", path: "/" },
-    { icon: Users, label: "Utilisateurs", path: "/users" },
-    { icon: Box, label: "Produits", path: "/products" },
-    { icon: BarChart, label: "Statistiques", path: "/stats" },
-    { icon: Settings, label: "Paramètres", path: "/settings" },
+    { icon: Home, label: "Tableau de bord", path: "/respoHomePage" },
+    { icon: Users, label: "Utilisateurs", path: "/adminHomePage" },
+    { icon: Box, label: "Produits", path: "/respoHomePage" },
+    { icon: BarChart, label: "Statistiques", path: "/respoHomePage" },
+    { icon: Settings, label: "Paramètres", path: "/respoHomePage" },
   ]
-
-const Sidebar = ({activePath = "/"}) => {
+ 
+const Sidebar = ({activePath = "/adminHomePage"}) => {
     return (
         <aside className="w-64 bg-slate-50 h-[calc(100vh-4rem)] p-4">
             <nav className="space-y-2">

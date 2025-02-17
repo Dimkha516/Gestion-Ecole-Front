@@ -3,6 +3,9 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import LoginPage from "./pages/login";
+import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AdminHomePage from "./pages/adminHomePage";
+import RespoHomePage from "./pages/RespoHomePage";
 
 function App() {
   // Simuler l'utilisateur connecté:
@@ -32,9 +35,24 @@ function App() {
       <Navbar username={user.username} onLogout={handleLogout} />
       <div className="flex">
         <Sidebar activePath={window.location.pathname} />
-        <main className="flex-1 p-6">
+          
+          
           {/* Contenu principal de vos pages */}
+        {/* <main className="flex-1 p-6">
           <h1 className="text-2xl font-bold">Contenu de la page</h1>
+        </main> */}
+        <main className="flex-1 p-6">
+          <Router>
+          
+          <Routes>
+          
+          <Route path="/adminHomePage" element={<AdminHomePage />} />
+          <Route path="/respoHomePage" element={<RespoHomePage />} />
+          
+          </Routes> 
+          
+          </Router>
+        
         </main>
       </div>
     </div>
@@ -42,3 +60,4 @@ function App() {
 }
 
 export default App;
+
