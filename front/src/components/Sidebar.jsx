@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 const menuItems = [
   { icon: Home, label: "Tableau de bord", path: "/respoHomePage" },
   { icon: Users, label: "Utilisateurs", path: "/adminHomePage" },
-  { icon: Box, label: "Produits", path: "/respoHomePage" },
-  { icon: BarChart, label: "Statistiques", path: "/respoHomePage" },
-  { icon: Settings, label: "Paramètres", path: "/respoHomePage" },
+  // { icon: Box, label: "Produits", path: "/test1" },
+  // { icon: BarChart, label: "Statistiques", path: "/test2" },
+  // { icon: Settings, label: "Paramètres", path: "/test3" },
 ];
 
 const Sidebar = ({ activePath = "/" }) => {
