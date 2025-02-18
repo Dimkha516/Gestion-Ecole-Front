@@ -1,35 +1,11 @@
-import { useState } from "react";
 import { Button } from "../ui/button";
 import { Edit, Trash2, UserPlus } from "lucide-react";
 import { DataTable } from "../ui/data-table";
+import { useSelector } from "react-redux";
 
 const UsersList = () => {
-  const [users] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Admin",
-      status: "Actif",
-      lastLogin: "2024-02-17",
-    },
-    {
-        id: 2,
-        name: "Mister You",
-        email: "mister@example.com",
-        role: "Etudiant",
-        status: "Actif",
-        lastLogin: "2024-02-17",
-      },
-      {
-        id: 3,
-        name: "leon mendy",
-        email: "leon@example.com",
-        role: "Caissier",
-        status: "Bloque",
-        lastLogin: "2024-02-17",
-      },
-  ]);
+  const users = useSelector((state) => state.usersReducer);  
+
 
   const handleEdit = (userId) => {
     console.log("Éditer l'utilisateur:", userId);
@@ -41,16 +17,20 @@ const UsersList = () => {
 
   const columns = [
     {
-      accessorKey: "name",
+      accessorKey: "nom",
       header: "Nom",
+    },
+    {
+      accessorKey: "prenom",
+      header: "Prenom",
     },
     {
       accessorKey: "email",
       header: "Email",
     },
     {
-      accessorKey: "role",
-      header: "Rôle",
+      accessorKey: "profil",
+      header: "Profile",
     },
     {
       accessorKey: "status",
@@ -58,7 +38,7 @@ const UsersList = () => {
       cell: ({ row }) => (
         <span
           className={`px-2 py-1 rounded-full text-xs ${
-            row.original.status === "Actif"
+            row.original.status === "active"
               ? "bg-green-100 text-green-700"
               : "bg-red-100 text-red-700"
           }`}
@@ -68,10 +48,10 @@ const UsersList = () => {
       ),
     },
     {
-      accessorKey: "lastLogin",
+      accessorKey: "lastConnexion",
       header: "Dernière connexion",
       cell: ({ row }) =>
-        new Date(row.original.lastLogin).toLocaleDateString("fr-FR"),
+        new Date(row.original.lastConnexion).toLocaleDateString("fr-FR"),
     },
     {
       id: "actions",
@@ -112,11 +92,13 @@ const UsersList = () => {
 
       <DataTable
         columns={columns}
-        data={users}
-        onSearch={(value) => {
-          console.log("Recherche:", value);
-          // Implémentez la recherche côté serveur ici
-        }}
+        data={users.allUsers || []} // Toujours un tableau
+        // data={users.allUsers}
+        // data={fakeUsers}
+        // onSearch={(value) => {
+        //   console.log("Recherche:", value);
+        //   // Implémentez la recherche côté serveur ici
+        // }}
       />
     </div>
   );
