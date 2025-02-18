@@ -72,7 +72,7 @@ const Dashboard = () => {
       count: "18",
       icon: Calendar,
       color: "bg-yellow-500",
-      path: "/emplois-du-temps",
+      path: "/agenda",
       description: "Planning des cours par classe",
     },
     {
@@ -104,11 +104,11 @@ const Dashboard = () => {
     },
     {
       id: 8,
-      title: "Performance",
+      title: "Eval./Examens",
       count: "78%",
       icon: TrendingUp,
       color: "bg-orange-500",
-      path: "/performances",
+      path: "/evaluations",
       description: "Taux de réussite moyen",
     },
   ];
