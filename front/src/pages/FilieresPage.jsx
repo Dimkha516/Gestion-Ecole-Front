@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import DataHandler from "../DataHandler";
+import { useSelector } from "react-redux";
 
 const FilieresPage = () => {
+  const allFilieres = useSelector((state) => state.filieresReducer);
 
   return (
     <div>
