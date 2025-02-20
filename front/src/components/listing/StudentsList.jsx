@@ -1,38 +1,46 @@
+import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { Edit, Trash2, UserPlus } from "lucide-react";
 import { DataTable } from "../ui/data-table";
-import { useSelector } from "react-redux";
 
-const UsersList = () => {
-  const users = useSelector((state) => state.usersReducer);
+const StudentsList = () => {
+  const students = useSelector((state) => state.studentsReducer);
 
   const handleEdit = (userId) => {
-    console.log("Éditer l'utilisateur:", userId);
+    console.log("Éditer l'étudiant:", userId);
   };
 
   const handleDelete = (userId) => {
-    console.log("Supprimer l'utilisateur:", userId);
+    console.log("Supprimer l'étudiant:", userId);
   };
 
   const columns = [
+    // {
+    //   accessorKey: "photo",
+    //   header: "Photo",
+    // },
     {
-      accessorKey: "nom",
-      header: "Nom",
+      accessorKey: "matricule",
+      header: "Matricule",
     },
     {
       accessorKey: "prenom",
       header: "Prenom",
     },
     {
+      accessorKey: "nom",
+      header: "Nom",
+    },
+    {
       accessorKey: "email",
       header: "Email",
     },
     {
-      accessorKey: "profil",
-      header: "Profile",
+      accessorKey: "telephone",
+      header: "Téléphone",
     },
     {
-      accessorKey: "status",
+      accessorKey: "statut",
       header: "Statut",
       cell: ({ row }) => (
         <span
@@ -42,15 +50,15 @@ const UsersList = () => {
               : "bg-red-100 text-red-700"
           }`}
         >
-          {row.original.status}
+          {row.original.statut}
         </span>
       ),
     },
     {
-      accessorKey: "lastConnexion",
-      header: "Dernière connexion",
+      accessorKey: "dateInscription",
+      header: "Inscription",
       cell: ({ row }) =>
-        new Date(row.original.lastConnexion).toLocaleDateString("fr-FR"),
+        new Date(row.original.dateInscription).toLocaleDateString("fr-FR"),
     },
     {
       id: "actions",
@@ -81,20 +89,20 @@ const UsersList = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900">
-          Gestion des utilisateurs
+          Gestion des étudiants
         </h1>
         <Button className="flex items-center gap-2">
           <UserPlus className="h-4 w-4" />
-          Ajouter un utilisateur
+          Ajouter Etudiant
         </Button>
       </div>
 
       <DataTable
         columns={columns}
-        data={users.allUsers || []} // Toujours un tableau
+        data={students.students || []} // Toujours un tableau
       />
     </div>
   );
 };
 
-export default UsersList;
+export default StudentsList;

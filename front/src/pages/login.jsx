@@ -4,34 +4,44 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2 } from "lucide-react";
+import axios from "axios";
 
-const LoginPage = ({ onLogin }) => {    
+
+// const LoginPage = ({ onLogin }) => {
+  const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [errors, setErrors] = useState(true);
+  const [formData, setFormData] = useState({ email: "", password: "" });
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrors({}); // Reset les erreurs
+
     try {
-      // Simuler un délai d'authentification
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      onLogin(formData);
-    } catch (error) {
-      console.error("Erreur de connexion:", error);
+      const res = await axios.post(
+        "http://localhost:5000/api/v1/users/login",
+        formData,
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        localStorage.setItem("user", JSON.stringify(res.data.ConnectedUser));
+        window.location.href = "/respoHomePage"; // Redirection après connexion
+      }
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Une erreur s'est produite.";
+      setErrors({ global: message });
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" }); // Effacer l'erreur quand l'utilisateur tape
   };
 
   return (
@@ -46,6 +56,10 @@ const LoginPage = ({ onLogin }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {errors.global && (
+              <p className="text-red-500 text-sm">{errors.global}</p>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -58,9 +72,11 @@ const LoginPage = ({ onLogin }) => {
                   value={formData.email}
                   onChange={handleChange}
                   className="pl-10"
-                  required
                 />
               </div>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -75,9 +91,11 @@ const LoginPage = ({ onLogin }) => {
                   value={formData.password}
                   onChange={handleChange}
                   className="pl-10"
-                  required
                 />
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
+              )}
             </div>
 
             <div className="flex items-center justify-between">
@@ -105,6 +123,7 @@ const LoginPage = ({ onLogin }) => {
                 "Se connecter"
               )}
             </Button>
+            
           </form>
         </div>
       </div>
