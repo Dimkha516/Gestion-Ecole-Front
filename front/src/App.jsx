@@ -25,10 +25,10 @@ function App() {
   if (isLoginPage) {
     return (
       <LoginPage
-        onLogin={(formData) => {
-          console.log("Tentative de connexion avec:", formData);
+        // onLogin={(formData) => {
+        //   console.log("Tentative de connexion avec:", formData);
           // Implémentez votre logique d'authentification ici
-        }}
+        // }}
       />
     );
   }

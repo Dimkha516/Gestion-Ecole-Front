@@ -8,7 +8,8 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Card } from "./ui/Card";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
 const DashboardCard = ({
   title,
@@ -37,11 +38,13 @@ const DashboardCard = ({
 };
 
 const Dashboard = () => {
+  const statistics = useSelector((state) => state.statisticsReducer).statistics;
+
   const cards = [
     {
       id: 1,
       title: "Filières",
-      count: "12",
+      count: statistics.totalFilieres,
       icon: School,
       color: "bg-blue-500",
       path: "/filieres",
@@ -49,9 +52,8 @@ const Dashboard = () => {
     },
     {
       id: 2,
-      title: "Classes",
-      count: "24",
-      //   icon: ChalkBoard,
+      title: "Salles",
+      count: statistics.totalSalles,
       icon: School,
       color: "bg-green-500",
       path: "/classes",
@@ -60,7 +62,7 @@ const Dashboard = () => {
     {
       id: 3,
       title: "Étudiants",
-      count: "450",
+      count: statistics.totalStudents,
       icon: Users,
       color: "bg-purple-500",
       path: "/etudiants",
@@ -78,7 +80,7 @@ const Dashboard = () => {
     {
       id: 5,
       title: "Professeurs",
-      count: "32",
+      count: statistics.totalTeachers,
       icon: GraduationCap,
       color: "bg-red-500",
       path: "/professeurs",
@@ -87,7 +89,7 @@ const Dashboard = () => {
     {
       id: 6,
       title: "Cours",
-      count: "86",
+      count: statistics.totalCours,
       icon: BookOpen,
       color: "bg-indigo-500",
       path: "/cours",
@@ -112,6 +114,7 @@ const Dashboard = () => {
       description: "Taux de réussite moyen",
     },
   ];
+
   return (
     <div className="p-6 space-y-6">
       <div>
