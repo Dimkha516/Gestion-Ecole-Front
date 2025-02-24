@@ -10,22 +10,25 @@ import { Provider } from "react-redux";
 import { getUsers } from "./actions/users.actions.jsx";
 import { getStudents } from "./actions/students.actions.jsx";
 import { getStatistics } from "./actions/statistics.actions.jsx";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const store = configureStore({
-  reducer: rootReducer, 
+  reducer: rootReducer,
+  // middleware: [thunk],  // Enable Redux Thunk for async actions
   devTools: true,
 });
 
-store.dispatch(getFilieres()); 
+store.dispatch(getFilieres());
 store.dispatch(getUsers());
 store.dispatch(getStudents());
 store.dispatch(getStatistics());
- 
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </Provider>
-    ,
   </StrictMode>
 );
