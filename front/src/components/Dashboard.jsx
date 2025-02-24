@@ -10,6 +10,7 @@ import {
 import { Card } from "./ui/Card";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const DashboardCard = ({
   title,
@@ -19,8 +20,12 @@ const DashboardCard = ({
   path,
   description,
 }) => {
+  const navigate = useNavigate();
   return (
-    <a href={path} className="block transition-transform hover:scale-105">
+    <div
+      onClick={() => navigate(path)}
+      className="block transition-transform hover:scale-105 cursor-pointer"
+    >
       <Card className="p-6 h-full">
         <div className="flex items-start justify-between">
           <div>
@@ -33,7 +38,7 @@ const DashboardCard = ({
         </div>
         <p className="text-sm text-slate-600 mt-4">{description}</p>
       </Card>
-    </a>
+    </div>
   );
 };
 

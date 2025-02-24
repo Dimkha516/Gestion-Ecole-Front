@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { UidContext } from "../components/AppContext";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState(true);
   const [formData, setFormData] = useState({ email: "", password: "" });
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const {setUid} = useContext(UidContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,8 +28,8 @@ const LoginPage = () => {
 
       if (res.status === 200) {
         localStorage.setItem("user", JSON.stringify(res.data.ConnectedUser));
-        // navigate("/respoHomePage", {replace: true});
-        window.location = "/respoHomePage"
+        setUid(res.data.ConnectedUser._id);
+        navigate("/respoHomePage", {replace: true});
       }
     } catch (err) {
       const message =
@@ -38,13 +40,6 @@ const LoginPage = () => {
     }
   };
 
-  // catch (err) {
-  //   const message =
-  //     err.response?.data?.message || "Une erreur s'est produite.";
-  //   setErrors({ global: message });
-  // } finally {
-  //   setIsLoading(false);
-  // }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
