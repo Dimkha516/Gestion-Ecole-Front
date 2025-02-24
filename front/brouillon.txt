@@ -1,0 +1,50 @@
+// { icon: Box, label: "Produits", path: "/test1" },
+  // { icon: BarChart, label: "Statistiques", path: "/test2" },
+  // { icon: Settings, label: "Paramètres", path: "/test3" },
+
+  // <aside className="w-64 bg-slate-50 h-[calc(100vh-4rem)] p-4">
+    //   <nav className="space-y-2">
+    //     {menuItems.map((item) => {
+    //       const Icon = item.icon;
+    //       return (
+    //         <a
+    //           key={item.path}
+    //           href={item.path}
+    //           className={cn(
+    //             "flex items-center gap-3 px-3 py-2 rounded-md text-slate-700 hover:bg-slate-200 transition-colors",
+    //             activePath === item.path && "bg-slate-200 font-medium"
+    //           )}
+    //         >
+    //           <Icon className="h-5 w-5" />
+    //           <span>{item.label}</span>
+    //         </a>
+    //       );
+    //     })}
+    //   </nav>
+    // </aside>
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrors({}); // Reset les erreurs
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/v1/users/login",
+        formData,
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        localStorage.setItem("user", JSON.stringify(res.data.ConnectedUser));
+  
+        navigate("/respoHomePage", {replace: true});
+      }
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Une erreur s'est produite.";
+      setErrors({ global: message });
+    } finally {
+      setIsLoading(false);
+    }
+  };

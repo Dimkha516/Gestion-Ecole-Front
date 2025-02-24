@@ -1,9 +1,8 @@
-import { useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import LoginPage from "./pages/login";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// BrowserRouter as Router,
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import AdminHomePage from "./pages/adminHomePage";
 import RespoHomePage from "./pages/RespoHomePage";
 import FilieresPage from "./pages/FilieresPage";
@@ -14,43 +13,65 @@ import Professeurs from "./pages/Professeurs";
 import Cours from "./pages/Cours";
 import Presences from "./pages/Presences";
 import Evaluations from "./pages/Evaluations";
+import axios from "axios";
+import { UidContext } from "./components/AppContext";
+import LoginPage from "./pages/login";
+import NotFound from "./pages/Notfound";
+import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { getUser } from "./actions/user.actions";
 
 function App() {
-  // Simuler l'utilisateur connecté:
-  const [user] = useState({ username: "John Doe" });
+  const navigate = useNavigate();
+  const location = useLocation();
+  const hideLayoutPaths = ["/login"]; // Ajoutez ici d'autres chemins si nécessaire
+  const isLayoutHidden = hideLayoutPaths.includes(location.pathname);
 
-  // Vérifer si on est sur la page login:
-  const isLoginPage = window.location.pathname === "/login";
+  const [uid, setUid] = useState(null);
+  const dispatch = useDispatch();
 
-  if (isLoginPage) {
-    return (
-      <LoginPage
-        // onLogin={(formData) => {
-        //   console.log("Tentative de connexion avec:", formData);
-          // Implémentez votre logique d'authentification ici
-        // }}
-      />
-    );
-  }
+  useEffect(() => {
+    const fetchToken = async () => {
+      await axios({
+        method: "get",
+        url: "http://localhost:5000/api/v1/jwt",
+        withCredentials: true,
+      })
+        .then((res) => {
+          setUid(res.data);
+          console.log(uid);
+          
+        })
+        .catch((err) =>
+          console.log("Erreur lors de la récupération du token JWT:", err)
+        );
+    };
+    fetchToken();
+    if (uid) dispatch(getUser(uid));
+  }, []);
+  // }, [uid, dispatch]);
 
-  const handleLogout = () => {
-    // Déconnexion de l'utilisateur
-    console.log("Utilisateur déconnecté ");
+  const handleLogout = async () => {
+    await axios({
+      method: "post",
+      url: "http://localhost:5000/api/v1/users/logout",
+      withCredentials: true,
+    }).then(() => {
+      console.log("Utilisateur déconnecté ");
+      setUid(null);
+      localStorage.removeItem("user");
+      navigate("/login", { replace: true });
+    });
   };
-
   return (
-    <div className="min-h-screen">
-      <Navbar username={user.username} onLogout={handleLogout} />
-      <div className="flex">
-        <Sidebar activePath={window.location.pathname} />
-
-        {/* Contenu principal de vos pages */}
-        {/* <main className="flex-1 p-6">
-          <h1 className="text-2xl font-bold">Contenu de la page</h1>
-        </main> */}
-        <main className="flex-1 p-6">
-          <Router>
+    <UidContext.Provider value={uid}>
+      <div className="min-h-screen">
+        {!isLayoutHidden && <Navbar onLogout={handleLogout} />}
+        <div className="flex">
+          {!isLayoutHidden && <Sidebar activePath={location.pathname} />}
+          <main className="flex-1 p-6">
             <Routes>
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/adminHomePage" element={<AdminHomePage />} />
               <Route path="/respoHomePage" element={<RespoHomePage />} />
               <Route path="/filieres" element={<FilieresPage />} />
@@ -60,13 +81,13 @@ function App() {
               <Route path="/professeurs" element={<Professeurs />} />
               <Route path="/cours" element={<Cours />} />
               <Route path="/presences" element={<Presences />} />
-              <Route path="/evaluations" element={<Evaluations/>} />
+              <Route path="/evaluations" element={<Evaluations />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
-          </Router>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </UidContext.Provider>
   );
 }
-
 export default App;
