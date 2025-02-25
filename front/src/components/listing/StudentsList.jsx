@@ -2,9 +2,32 @@ import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { Edit, Trash2, UserPlus } from "lucide-react";
 import { DataTable } from "../ui/data-table";
+import { useState } from "react";
 
 const StudentsList = () => {
   const students = useSelector((state) => state.studentsReducer);
+
+  // États pour les filtres
+  const [selectedFiliere, setSelectedFiliere] = useState("");
+  const [selectedNiveau, setSelectedNiveau] = useState("");
+
+  // Liste des filières et niveaux disponibles (pour les options)
+  const filieres = [...new Set(students.students?.map((s) => s.filiere))];
+  const niveaux = [...new Set(students.students?.map((s) => s.niveau))];
+
+  // Fonction de filtrage
+  const filteredStudents = students.students?.filter((student) => {
+    return (
+      (selectedFiliere === "" || student.filiere === selectedFiliere) &&
+      (selectedNiveau === "" || student.niveau === selectedNiveau)
+    );
+  });
+
+  // Fonction pour réinitialiser les filtres
+  const resetFilters = () => {
+    setSelectedFiliere("");
+    setSelectedNiveau("");
+  };
 
   const handleEdit = (userId) => {
     console.log("Éditer l'étudiant:", userId);
@@ -15,10 +38,18 @@ const StudentsList = () => {
   };
 
   const columns = [
-    // {
-    //   accessorKey: "photo",
-    //   header: "Photo",
-    // },
+    {
+      accessorKey: "photo",
+      header: "Photo",
+      cell: ({ row }) => (
+        <img
+          src={row.original.photo} // Assurez-vous que cette clé est correcte
+          alt="Photo de l'étudiant"
+          className="h-10 w-10 rounded-full object-cover"
+          onError={(e) => (e.target.src = "/default-avatar.png")} // Image par défaut si erreur
+        />
+      ),
+    },
     {
       accessorKey: "matricule",
       header: "Matricule",
@@ -32,34 +63,14 @@ const StudentsList = () => {
       header: "Nom",
     },
     {
-      accessorKey: "email",
-      header: "Email",
+      accessorKey: "filiere",
+      header: "Filiere",
     },
     {
-      accessorKey: "telephone",
-      header: "Téléphone",
+      accessorKey: "niveau",
+      header: "Niveau",
     },
-    {
-      accessorKey: "statut",
-      header: "Statut",
-      cell: ({ row }) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs ${
-            row.original.status === "active"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {row.original.statut}
-        </span>
-      ),
-    },
-    {
-      accessorKey: "dateInscription",
-      header: "Inscription",
-      cell: ({ row }) =>
-        new Date(row.original.dateInscription).toLocaleDateString("fr-FR"),
-    },
+
     {
       id: "actions",
       header: "Actions",
@@ -97,10 +108,44 @@ const StudentsList = () => {
         </Button>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={students.students || []} // Toujours un tableau
-      />
+      {/* Zone de filtre */}
+      <div className="flex gap-4">
+        {/* Filtre Filière */}
+        <select
+          value={selectedFiliere}
+          onChange={(e) => setSelectedFiliere(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">Toutes les filières</option>
+          {filieres.map((filiere) => (
+            <option key={filiere} value={filiere}>
+              {filiere}
+            </option>
+          ))}
+        </select>
+
+        {/* Filtre Niveau */}
+        <select
+          value={selectedNiveau}
+          onChange={(e) => setSelectedNiveau(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="">Tous les niveaux</option>
+          {niveaux.map((niveau) => (
+            <option key={niveau} value={niveau}>
+              {niveau}
+            </option>
+          ))}
+        </select>
+        {/* Bouton Réinitialiser */}
+        <Button
+          onClick={resetFilters}
+          className="bg-gray-500 text-white px-4 py-2 rounded"
+        >
+          Réinitialiser
+        </Button>
+      </div>
+      <DataTable columns={columns} data={filteredStudents || []} />
     </div>
   );
 };
