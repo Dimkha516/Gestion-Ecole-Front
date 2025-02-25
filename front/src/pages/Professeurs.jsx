@@ -1,7 +1,9 @@
+import TeachersList from "../components/listing/TeachersList";
+
 const Professeurs = () => {
   return (
     <div>
-      <h1>Professeurs</h1>
+      <TeachersList/>
     </div>
   );
 };
