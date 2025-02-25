@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Edit, Trash2, UserPlus } from "lucide-react";
 import { DataTable } from "../ui/data-table";
 import { useState } from "react";
+import AddStudentForm from "../forms/AddStudentForm";
 
 const StudentsList = () => {
   const students = useSelector((state) => state.studentsReducer);
@@ -14,6 +15,7 @@ const StudentsList = () => {
   // Liste des filières et niveaux disponibles (pour les options)
   const filieres = [...new Set(students.students?.map((s) => s.filiere))];
   const niveaux = [...new Set(students.students?.map((s) => s.niveau))];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fonction de filtrage
   const filteredStudents = students.students?.filter((student) => {
@@ -37,6 +39,11 @@ const StudentsList = () => {
     console.log("Supprimer l'étudiant:", userId);
   };
 
+  const handleAddStudent = (newStudent) => {
+    console.log("Nouvel étudiant ajouté :", newStudent);
+    // Ici, tu peux dispatcher une action Redux pour ajouter l’étudiant au state global
+  };
+
   const columns = [
     {
       accessorKey: "photo",
@@ -44,7 +51,7 @@ const StudentsList = () => {
       cell: ({ row }) => (
         <img
           src={row.original.photo} // Assurez-vous que cette clé est correcte
-          alt="Photo de l'étudiant"
+          alt="Étudiant"
           className="h-10 w-10 rounded-full object-cover"
           onError={(e) => (e.target.src = "/default-avatar.png")} // Image par défaut si erreur
         />
@@ -102,11 +109,20 @@ const StudentsList = () => {
         <h1 className="text-2xl font-bold text-slate-900">
           Gestion des étudiants
         </h1>
-        <Button className="flex items-center gap-2">
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2"
+        >
           <UserPlus className="h-4 w-4" />
           Ajouter Etudiant
         </Button>
       </div>
+
+      <AddStudentForm
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddStudent}
+      />
 
       {/* Zone de filtre */}
       <div className="flex gap-4">
